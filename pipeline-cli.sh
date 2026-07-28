@@ -309,7 +309,7 @@ pipeline_cli_print_help() {
         '      --private-key FILE      Cosign private key' \
         '      --public-key FILE       Cosign public key' \
         '  -p, --policy-file FILE      Kyverno policy filename; repeatable' \
-	'      --push		       Push the image to the docker hub' \
+		'      --push				   Push the image to the docker hub' \
         '' \
         'Other:' \
         '  -h, --help                  Show this help'
