@@ -177,7 +177,7 @@ install_k3s() {
 
 	log_info "Installing k3s"
 
-	curl -sfL https://get.k3s.io | sudo sh -
+	curl -sfL https://get.k3s.io | sudo sh -s - --write-kubeconfig-mode 644
 
 	if sudo systemctl is-active --quiet k3s; then
 		log_success "K3s is active"
