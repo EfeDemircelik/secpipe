@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+LOG_DIR="$HOME/pipesec/reports"
+INSTALL_LOG="$LOG_DIR/install-$(date '+%Y%m%d-%H%M%S').log"
+
+mkdir -p "$LOG_DIR"
+touch "$INSTALL_LOG"
+
+# Save the original terminal output
+exec 3>&1
+exec 4>&2
+
+# Send normal command output to the log file
+exec >>"$INSTALL_LOG" 2>&1
+
 # Installation selections
 INSTALL_HADOLINT=true
 INSTALL_TRIVY=true
@@ -22,27 +35,49 @@ BLUE='\033[0;34m'
 #========== Log functions ==========
 
 log_info() {
+    local timestamp
+    timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+
+    # Colored output to terminal
     printf "[%s] ${BLUE}[INFO]${RESET} %s\n" \
-        "$(date '+%Y-%m-%d %H:%M:%S')" \
-        "$*"
+        "$timestamp" "$*" >&3
+
+    # Plain output to installation log
+    printf "[%s] [INFO] %s\n" \
+        "$timestamp" "$*"
 }
 
 log_success() {
+    local timestamp
+    timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+
     printf "[%s] ${GREEN}[SUCCESS]${RESET} %s\n" \
-        "$(date '+%Y-%m-%d %H:%M:%S')" \
-        "$*"
+        "$timestamp" "$*" >&3
+
+    printf "[%s] [SUCCESS] %s\n" \
+        "$timestamp" "$*"
 }
 
 log_warning() {
+    local timestamp
+    timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+
     printf "[%s] ${YELLOW}[WARNING]${RESET} %s\n" \
-        "$(date '+%Y-%m-%d %H:%M:%S')" \
-        "$*" >&2
+        "$timestamp" "$*" >&4
+
+    printf "[%s] [WARNING] %s\n" \
+        "$timestamp" "$*" >&2
 }
 
 log_error() {
+    local timestamp
+    timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+
     printf "[%s] ${RED}[ERROR]${RESET} %s\n" \
-        "$(date '+%Y-%m-%d %H:%M:%S')" \
-        "$*" >&2
+        "$timestamp" "$*" >&4
+
+    printf "[%s] [ERROR] %s\n" \
+        "$timestamp" "$*" >&2
 }
 
 command_exists() {
@@ -261,8 +296,7 @@ configure_kubeconfig() {
 
     if ! helm \
         --kubeconfig "$target_config" \
-        list --all-namespaces \
-        >/dev/null
+        list --all-namespaces
     then
         log_error "Helm cannot connect to the k3s cluster"
         return 1
