@@ -22,7 +22,6 @@ PIPELINE_CLI_HELP=false
 
 pipeline_cli_reset() {
     PIPELINE_CLI_OPERATIONS=()
-    PIPELINE_CLI_POLICY_FILES=()
 
     PIPELINE_CLI_IMAGE=""
     PIPELINE_CLI_DOCKERFILE="Dockerfile"
