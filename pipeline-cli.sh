@@ -14,10 +14,6 @@ PIPELINE_CLI_LOADED=true
 # Selected operations are stored as a set.
 declare -Ag PIPELINE_CLI_OPERATIONS=()
 
-# Policy files may be repeated because one run may apply several Kyverno
-# policies. The image and Dockerfile remain single values.
-declare -ag PIPELINE_CLI_POLICY_FILES=()
-
 PIPELINE_CLI_IMAGE=""
 PIPELINE_CLI_DOCKERFILE="Dockerfile"
 PIPELINE_CLI_PRIVATE_KEY=""
