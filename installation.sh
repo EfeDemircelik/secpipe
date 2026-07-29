@@ -122,6 +122,12 @@ install_helm() {
 		return 0
 	fi
 	
+	if ! command_exists snap; then
+    	log_info "Installing snapd"
+    	sudo apt-get install -y snapd
+    	sudo systemctl enable --now snapd
+	fi
+	
 	log_info "Installing Helm"
 
 	sudo snap install helm --classic
@@ -391,7 +397,9 @@ main() {
     fi 
 
     log_success "Requested installations completed"
-    log_warning "Log out and log back in to use Docker without sudo"
+	if [ "$INSTALL_DOCKER" = true ]; then
+    	log_warning "Log out and log back in to use Docker without sudo"
+	fi
 }
 
 main "$@"
