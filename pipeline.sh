@@ -91,20 +91,6 @@ pipeline_validate_arguments() {
         return 2
     fi
 
-    if pipeline_cli_operation_selected kyverno-policy &&
-        (( ${#PIPELINE_CLI_POLICY_FILES[@]} == 0 ))
-    then
-        pipeline_error "--apply-policy requires at least one --policy-file FILE"
-        return 2
-    fi
-
-    if ! pipeline_cli_operation_selected kyverno-policy &&
-        (( ${#PIPELINE_CLI_POLICY_FILES[@]} > 0 ))
-    then
-        pipeline_error "--policy-file requires --apply-policy"
-        return 2
-    fi
-
     if [[ -n "$PIPELINE_CLI_PRIVATE_KEY" ]] &&
         ! pipeline_cli_operation_selected cosign-sign
     then
@@ -189,11 +175,7 @@ pipeline_run_selected_operations() {
     fi
 
     if pipeline_cli_operation_selected kyverno-policy; then
-        local policy_file
-
-        for policy_file in "${PIPELINE_CLI_POLICY_FILES[@]}"; do
-            kubectl_apply_policy "$policy_file"
-        done
+         kubectl_apply_policy
     fi
 
     if pipeline_cli_operation_selected check-kyverno; then
