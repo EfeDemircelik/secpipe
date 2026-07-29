@@ -506,17 +506,14 @@ kubectl_apply_file() {
 }
 
 kubectl_apply_policy() {
-	local policy_name="$1"
-	local policy_file="$PIPELINE_POLICY_DIR/$policy_name"
-
 	local report="$REPORT_DIR/kubectl-policy.txt"
 
 	require_command kubectl || return
-	require_file "$policy_file" || return
+	require_directory "$PIPELINE_POLICY_DIR" || return
 
-	log_info "Applying policy: $policy_file"
+	log_info "Applying policy from: $PIPELINE_POLICY_DIR"
 
-	if kubectl apply -f "$policy_file" 2>&1 | tee -a "$report"
+	if kubectl apply -f "$PIPELINE_POLICY_DIR" 2>&1 | tee -a "$report"
 	then
 		log_success "Policy applied successfully"
 	else
