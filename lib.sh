@@ -209,7 +209,6 @@ hadolint_scan(){
 		log_success "Hadolint scan passed"
 	else
 		local exit_code=$?
-		cat "$report"
 		log_error "Hadolint scan failed"
 		return "$exit_code"
 	fi
@@ -233,7 +232,6 @@ trivy_dockerfile_scan() {
 		log_success "trivy dockerfile scan passed"
 	else
 		local exit_code=$?
-		cat "$report"
 		log_error "Trivy dockerfile scan failed"
 		return "$exit_code"
 	fi
@@ -255,7 +253,6 @@ trivy_image_scan() {
 		log_success "Trivy image scan passed"
 	else
 		local exit_code=$?
-		cat "$report"
 		log_error "Trivy image scan failed"
 		return "$exit_code"
 	fi
@@ -296,7 +293,6 @@ docker_build_image() {
 		log_success "Docker image build success: $image_ref"
 	else
 		local exit_code=$?
-		cat "$report"
 		log_error "Docker build failed"
 		return "$exit_code"
 	fi
@@ -390,7 +386,6 @@ syft_generate_sbom() {
 		log_success "syft sucessfully generated SBOM."
 	else
 		local exit_code=$?
-		cat "$report"
 		log_error "syft SBOM generation failed"
 		return "$exit_code"
 	fi
@@ -412,7 +407,6 @@ grype_sbom_scan() {
 		log_success "Grype scan passed"
 	else
 		local exit_code=$?
-		cat "$report"
 		log_error "grype scan failed"
 		return "$exit_code"
 	fi
@@ -436,7 +430,6 @@ cosign_sign_image() {
 		log_success "cosign sign sucessfull: $image"
 	else
 		local exit_code=$?
-		cat "$report"
 		log_error "cosign sign failed"
 		return "$exit_code"
 	fi
@@ -459,7 +452,6 @@ cosign_verify_image() {
 		log_success "cosign verify sucessfully: $image"
 	else
 		local exit_code=$?
-		cat "$report"
 		log_error "cosign verify failed"
 		return "$exit_code"
 	fi
@@ -477,7 +469,6 @@ cosign_show_tree() {
 		log_success "Cosign tree displayed"
 	else
 		local exit_code=$?
-		cat "$report"
 		log_error "Cosign tree failed"
 		return "$exit_code"
 	fi
