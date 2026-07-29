@@ -299,15 +299,6 @@ install_kyverno() {
     log_success "Kyverno installed"
 }
 
-create_folders() {
-	mkdir -p pipelineSec
-	mkdir -p ./pipelineSec/config
-	mkdir -p ./pipelineSec/scripts
-	mkdir -p ./pipelineSec/keys
-	mkdir -p ./pipelineSec/policies
-	mkdir -p ./pipelineSec/reports
-}
-
 parse_arguments() {
     while [ "$#" -gt 0 ]; do
         case "$1" in
@@ -340,10 +331,6 @@ parse_arguments() {
                 INSTALL_HELM=false
                 INSTALL_KYVERNO=false
                 ;;
-				
-	    	--skip-folders)
-				CREATE_FOLDERS=false
-           		;; 
 				
 	    	*)
                 log_error "Unknown option: $1"
@@ -401,11 +388,7 @@ main() {
 
     if [ "$INSTALL_KYVERNO" = true ]; then
         install_kyverno
-    fi
-
-    if [ "$CREATE_FOLDERS" = true ]; then
-    	create_folders
-    fi    
+    fi 
 
     log_success "Requested installations completed"
     log_warning "Log out and log back in to use Docker without sudo"
