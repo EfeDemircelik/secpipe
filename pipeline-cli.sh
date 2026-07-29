@@ -231,29 +231,8 @@ pipeline_cli_parse() {
                 shift
                 ;;
 
-            # Repeatable because the project may contain several Kyverno policy
-            # files, even though there is only one image and one Dockerfile.
-            -p|--policy|--policy-file)
-                if (( $# < 2 )); then
-                    printf 'Error: %s requires a policy filename\n' "$1" >&2
-                    return 2
-                fi
-
-                PIPELINE_CLI_POLICY_FILES+=("$2")
-                shift 2
-                ;;
-	    --push|--docker-push)
-	 	PIPELINE_CLI_OPERATIONS[docker-push]=true
-		shift
-		;;
-
-            --policy=*|--policy-file=*)
-                if [[ -z "${1#*=}" ]]; then
-                    printf 'Error: --policy-file requires a policy filename\n' >&2
-                    return 2
-                fi
-
-                PIPELINE_CLI_POLICY_FILES+=("${1#*=}")
+            --push|--docker-push)
+                PIPELINE_CLI_OPERATIONS[docker-push]=true
                 shift
                 ;;
 
@@ -303,7 +282,6 @@ pipeline_cli_print_help() {
         '  -f, --dockerfile FILE       Dockerfile (default: Dockerfile)' \
         '      --private-key FILE      Cosign private key' \
         '      --public-key FILE       Cosign public key' \
-        '  -p, --policy-file FILE      Kyverno policy filename; repeatable' \
         '      --push                  Push the image to the docker hub' \
         '' \
         'Other:' \
