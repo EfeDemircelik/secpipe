@@ -46,27 +46,27 @@ pipeline_cli_parse() {
                 shift
                 ;;
 
-            -C|--trivy-config)
+            -c|--trivy-config)
                 PIPELINE_CLI_OPERATIONS[trivy-config]=true
                 shift
                 ;;
 
-            -B|--build)
+            -b|--build)
                 PIPELINE_CLI_OPERATIONS[build]=true
                 shift
                 ;;
 
-            -S|--syft)
+            -s|--syft)
                 PIPELINE_CLI_OPERATIONS[syft]=true
                 shift
                 ;;
 
-            -G|--grype)
+            -g|--grype)
                 PIPELINE_CLI_OPERATIONS[grype]=true
                 shift
                 ;;
 
-            -T|--trivy-image)
+            -t|--trivy-image)
                 PIPELINE_CLI_OPERATIONS[trivy-image]=true
                 shift
                 ;;
@@ -265,11 +265,11 @@ pipeline_cli_print_help() {
         '' \
         'Operations:' \
         '  -H, --hadolint              Run Hadolint' \
-        '  -C, --trivy-config          Run Trivy Dockerfile/config scan' \
-        '  -B, --build                 Build the Docker image' \
-        '  -S, --syft                  Generate an SBOM with Syft' \
-        '  -G, --grype                 Scan the generated SBOM with Grype' \
-        '  -T, --trivy-image           Run the Trivy image scan' \
+        '  -c, --trivy-config          Run Trivy Dockerfile/config scan' \
+        '  -b, --build                 Build the Docker image' \
+        '  -s, --syft                  Generate an SBOM with Syft' \
+        '  -g, --grype                 Scan the generated SBOM with Grype' \
+        '  -t, --trivy-image           Run the Trivy image scan' \
         '      --sign                  Sign the image with Cosign' \
         '      --verify                Verify the image with Cosign' \
         '      --tree                  Display the Cosign artifact tree' \
