@@ -209,6 +209,7 @@ hadolint_scan(){
 		log_success "Hadolint scan passed"
 	else
 		local exit_code=$?
+		
 		log_error "Hadolint scan failed"
 		return "$exit_code"
 	fi
@@ -219,7 +220,7 @@ hadolint_scan(){
 trivy_dockerfile_scan() {
 	local dockerfile="$(resolve_workspace_path "$1")"
 
-	local report="$REPORT_DIR/trivy-dockerfile.json"
+	local report="$REPORT_DIR/trivy-dockerfile.txt"
 
 	#checking if trivy command exists
 	require_command trivy || return
@@ -227,11 +228,12 @@ trivy_dockerfile_scan() {
 	#running trivy
 	log_info "Running trivy on: $dockerfile"
 	
-	if trivy config --severity "$TRIVY_SEVERITY" --format json --exit-code "$TRIVY_EXIT_CODE" --output "$report" "$dockerfile" 2>&1
+	if trivy config --severity "$TRIVY_SEVERITY" --exit-code "$TRIVY_EXIT_CODE" --output "$report" "$dockerfile" 2>&1
 	then
 		log_success "trivy dockerfile scan passed"
 	else
 		local exit_code=$?
+	
 		log_error "Trivy dockerfile scan failed"
 		return "$exit_code"
 	fi
@@ -253,6 +255,7 @@ trivy_image_scan() {
 		log_success "Trivy image scan passed"
 	else
 		local exit_code=$?
+
 		log_error "Trivy image scan failed"
 		return "$exit_code"
 	fi
@@ -293,6 +296,7 @@ docker_build_image() {
 		log_success "Docker image build success: $image_ref"
 	else
 		local exit_code=$?
+
 		log_error "Docker build failed"
 		return "$exit_code"
 	fi
@@ -386,6 +390,7 @@ syft_generate_sbom() {
 		log_success "syft sucessfully generated SBOM."
 	else
 		local exit_code=$?
+
 		log_error "syft SBOM generation failed"
 		return "$exit_code"
 	fi
@@ -395,18 +400,19 @@ syft_generate_sbom() {
 
 grype_sbom_scan() {
 	local sbom_file="$REPORT_DIR/syft-sbom.json"
-	local report="$REPORT_DIR/grype-result.json"
+	local report="$REPORT_DIR/grype-result.txt"
 
 	require_command grype || return
 	require_file "$sbom_file" || return
 
 	log_info "scanning SBOM with grype: $sbom_file"
 
-	if grype "sbom:$sbom_file" --fail-on "$GRYPE_FAIL_ON" --output json --file "$report"
+	if grype "sbom:$sbom_file" --fail-on "$GRYPE_FAIL_ON" --file "$report"
 	then
 		log_success "Grype scan passed"
 	else
 		local exit_code=$?
+
 		log_error "grype scan failed"
 		return "$exit_code"
 	fi
@@ -430,6 +436,7 @@ cosign_sign_image() {
 		log_success "cosign sign sucessfull: $image"
 	else
 		local exit_code=$?
+
 		log_error "cosign sign failed"
 		return "$exit_code"
 	fi
@@ -452,6 +459,7 @@ cosign_verify_image() {
 		log_success "cosign verify sucessfully: $image"
 	else
 		local exit_code=$?
+
 		log_error "cosign verify failed"
 		return "$exit_code"
 	fi
@@ -469,6 +477,7 @@ cosign_show_tree() {
 		log_success "Cosign tree displayed"
 	else
 		local exit_code=$?
+
 		log_error "Cosign tree failed"
 		return "$exit_code"
 	fi
@@ -547,7 +556,7 @@ kyverno_image_testing() {
 
 	log_info "Testing image against Kyverno policies: $image"
 	
-	if kubectl run "$pod_name" --image="$image" --dry-run=server --output yaml 2>&1 | tee "$report"
+	if kubectl run "$pod_name" --image="$image" --dry-run=server --output yaml > "$report" 2>&1
 	then
 		log_success "kyverno policies passed: $image is allowed"
 	else
